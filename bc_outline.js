@@ -32,4 +32,44 @@ function makeOutLine() {
       var outline = document.getElementById("outline");
       // Source document for the outline
       var source = document.getElementById("doc");
+
+      var mainHeading = document.createElement("h1");
+      var outlineList = document.createElement("ol");
+      var headingText = document.createTextNode("Outline");
+
+      mainHeading.appendChild(headingText);
+      outline.appendChild(mainHeading);
+      outline.appendChild(outlineList);
+      createList(source, outlineList);
+}
+
+function createList(source, outlineList) {
+      //headings for the outline
+      var headings = ["H1", "H2", "H3", "H4", "H5", "H6"];
+      //previous level of the headings
+      var prevLevel = 0;
+      //loop through all of the source article until no child nodes are left
+      for (var n = source.firstChild; n !== null; n = n.nextSibling) {
+            var headLevel = headings.indexOf(n.nodeName);
+            if (headLevel !== -1) {
+                  var listElem = document.createElement("li");
+                  listElem.innerHTML = n.firstChild.nodeValue;
+                  if (headLevel === prevLevel) {
+                        //append the list item to the current list
+                        outlineList.appendChild(listElem);
+                  } else if (headLevel > prevLevel) {
+                        //start a new nested list
+                        var nestedList = document.createElement("ol");
+                        nestedList.appendChild(listElem);
+                        //append the nested list to the last item in the current list
+                        outlineList.lastChild.appendChild(nestedList);
+                        // change the current list to the nested list
+                        outlineList = nestedList;
+                  } else {
+                        //append the list item to a higher list 
+                  }
+                  //update the value of prevLevel
+                  prevLevel = headLevel;
+            }
+      }
 }
